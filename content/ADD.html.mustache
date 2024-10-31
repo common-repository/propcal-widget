@@ -1,0 +1,39 @@
+<div class="wrap">
+    <p><a href="{{admin_url}}admin.php?page=pcw_admin_menu">Widgets</a> &gt; {{mod}} Widget</p>
+
+    <h2>{{mod}} Widget</h2>
+
+    <form method="post">
+        <input type="hidden" name="wid" value="{{id}}">
+        <table>
+            <tr>
+                <td><label for="pcw_name">Widget Name:</label></td>
+                <td><input type="text" id="pcw_name" name="pcw_name" value="{{name}}"></td>
+            </tr>
+            <tr>
+                <td><label for="pcw_pid">Property ID:</label></td>
+                <td><input type="text" id="pcw_pid", name="pcw_pid" value="{{unit_id}}"></td>
+            </tr>
+            <tr>
+                <td><label for="pcw_number">Show Numbers:</label></td>
+                <td><input type="checkbox" id="pcw_number" name="pcw_number" {{# show_numbers }} checked {{/ show_numbers }}></td>
+            </tr>
+            <tr>
+                <td><label for="pcw_note">Note:</label></td>
+                <td><input type="text" id="pcw_note" name="pcw_note" value="{{note}}"></td>
+            </tr>
+            <tr>
+                <td><label for="pcw_colour">Generate Colour Classes (advanced):</label></td>
+                <td><input type="checkbox" id="pcw_colour" name="pcw_colour" {{# show_colours }} checked {{/ show_colours }}></td>
+            </tr>
+            <tr>
+                <td><label for="pcw_stub_uat">UAT Stub (advanced):</label></td>
+                <td><input type="checkbox" id="pcw_stub_uat" name="stub_uat" {{# stub_uat }} checked {{/ stub_uat }}></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="{{mod}} Widget"></td>
+            </tr>
+        </table>
+    </form>
+</div>

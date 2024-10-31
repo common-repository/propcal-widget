@@ -1,0 +1,57 @@
+<div class="wrap">
+    <h2>
+        PropCal Widgets
+        <a class="add-new-h2" href="{{admin_url}}admin.php?page=pcw_add_widget_menu">Add New</a>
+    </h2>
+    <table class="widefat">
+        <thead>
+            <tr>
+                <th shape="col">
+                    <div>Widget ID</div>
+                </th>
+                <th shape="col">
+                    <div>Shortcode</div>
+                </th>
+                <th shape="col">
+                    <div>Name</div>
+                </th>
+                <th shape="col">
+                    <div>Property ID</div>
+                </th>
+                <th shape="col">
+                    <div>Show Colours</div>
+                </th>
+                <th shape="col">
+                    <div>Show Numbers</div>
+                </th>
+                <th shape="col">
+                    <div>UAT Stub</div>
+                </th>
+                <th shape="col" colspan="2">
+                    <div>Actions</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {{# widgets }}
+            <tr>
+                <td style="vertical-align:middle;">{{id}}</td>
+                <td style="vertical-align:middle;">[pcw_cals id="{{id}}"]</td>
+                <td style="vertical-align:middle;">{{name}}</td>
+                <td style="vertical-align:middle;">{{unit_id}}</td>
+                <td style="vertical-align:middle;">{{show_colours}}</td>
+                <td style="vertical-align:middle;">{{show_numbers}}</td>
+                <td style="vertical-align:middle;">{{stub_uat}}</td>
+
+                <td style="vertical-align:middle;">
+                    <a href="{{admin_url}}admin.php?page=pcw_edit_widget_menu&wid={{id}}">Edit</a>
+                </td>
+                <td style="vertical-align:middle;">
+                    <a href="{{admin_url}}admin.php?page=pcw_remove_widget_menu&wid={{id}}">Delete</a>
+                </td>
+            </tr>
+            {{/ widgets }}
+        </tbody>
+    </table>
+</div>
+

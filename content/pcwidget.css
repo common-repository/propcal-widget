@@ -1,0 +1,114 @@
+/*
+ * Copyright (c) 2017.  - Prop-Sync - All Rights Reserved
+ */
+
+.propcalwidget {
+    box-sizing: border-box;
+    display: table;
+    table-layout: fixed;
+    border-color: #666;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    border-width: 0px 1px 1px 1px;
+    border-radius: 0px 0px 5px 5px;
+    color: #445;
+    border-style: solid;
+}
+
+.propcalwidget .table-row {
+    box-sizing: border-box;
+    font-size: 12px;
+    display: table-row;
+}
+
+.propcalwidget .table-cell {
+    box-sizing: border-box;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    height: calc(200px / 6);
+    width: calc(280px / 7);
+    cursor: default;
+    border-top: 1px solid #bbb;
+}
+.propcalwidget .table-cell.available {
+    background-color: #56ff52;
+}
+
+.propcalwidget .table-cell.unavailable {
+    background-color: #f98369;
+}
+
+.propcalwidget .table-cell.day {
+    box-sizing: border-box;
+    border:none;
+}
+
+.propcalwidget .table-title {
+    box-sizing: border-box;
+    display: table-caption;
+    padding: 1rem;
+    border: 0px solid #666;
+    border-width: 1px 1px 0px 1px;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.propcalwidget .table-title .title {
+    display: block;
+}
+
+.propcalwidget .table-title input[type="number"] {
+    width: 5em;
+    height: 26px;
+    padding: 0 5px;
+}
+
+.propcalwidget .table-title .month-mover {
+    cursor: pointer;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently not supported by any browser */
+}
+
+.propcalwidget .form-control {
+    display: inline-block;
+    width: auto;
+    height: 26px;
+    padding: 1px 6px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+.propcalwidget .form-control:focus {
+    border-color: #66afe9;
+    color: #222;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+}
+.propcalwidget .form-control:hover {
+    border-color: #66afe9;
+    color: #222;
+}
+.propcalwidget .month-mover a {
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: none;
+    color: #66afe9;
+}
+.propcalwidget .month-mover a:hover {
+    text-decoration: none;
+    color: #4d6e93;
+}

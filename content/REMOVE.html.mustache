@@ -1,0 +1,11 @@
+<div class="wrap">
+    <h2>Delete Widget: {{name}}</h2>
+    <p><strong>Warning</strong> deletion is a permanent action and cannot be reversed! Are you sure
+    you want to delete widget {{id}}: {{name}}?</p>
+
+    <form method="post">
+    <input type="hidden" name="wid" value="{{id}}">
+    <input type="submit" class="button" name="action" value="Cancel, Do Nothing">
+    <input type="submit" class="button" name="action" value="Delete, Permanently Remove Widget">
+    </form>
+</div>

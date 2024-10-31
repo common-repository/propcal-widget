@@ -1,0 +1,167 @@
+(function() {
+    // Edit these to reflect your project
+    const API_URL = "{{api_url}}";
+    const SHOW_COLOURS = {{show_colours}};
+    const SHOW_NUMBERS = {{show_numbers}};
+    const UNIT = "{{unit_id}}";
+    const CAL_UNIQUE_ID = "pcw-{{id}}";
+
+    // Actual Constants
+    const ROW_SKIP = 2; // Marks the number of children of the widget to ignore when parsing
+
+    // Create a Cross Origin Resource Sharing Request.
+    function createCORSRequest(method, url) {
+        var xhr = new XMLHttpRequest();
+        if ("withCredentials" in xhr) {
+            // Check if the XMLHttpRequest object has a "withCredentials" unit.
+            // "withCredentials" only exists on XMLHTTPRequest2 objects.
+            xhr.open(method, url, true);
+        } else if (typeof XDomainRequest != "undefined") {
+            // Otherwise, check if XDomainRequest.
+            // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
+            xhr = new XDomainRequest();
+            xhr.open(method, url);
+        } else {
+            // Otherwise, CORS is not supported by the browser.
+            xhr = null;
+        }
+        return xhr;
+    }
+
+    // Update the table with an bitmask of availability. Must always contain 37 days of data.
+    function drawTableData(availabilityBitmask, daysOffset, daysInMonth) {
+        if (!availabilityBitmask.match(/^\d+$/g)) {
+            return; // Fail if query did not return expected response
+        }
+        var availabilityLength = availabilityBitmask.length / 37;
+        // Access every cell in our table
+        var table = document.getElementById(CAL_UNIQUE_ID);
+        var dayNumber = 1;
+        for (var i = ROW_SKIP; i < table.childElementCount; i++) {
+            table.children[i].style.display = "none";
+            var showRow = false;
+            for (var j = 0; j < table.children[i].childElementCount; j++) {
+                var dayInMonth = ((i - ROW_SKIP) * 7) + j + 1;
+                var maskPosition = dayInMonth * availabilityLength -1;
+                // TODO: Handle february on non leap years with feb 1 = monday
+                if (dayInMonth > daysOffset && dayInMonth <= daysInMonth + daysOffset ) {
+                    showRow=true;
+                    var availabilityString = availabilityBitmask.substring(maskPosition, maskPosition+availabilityLength);
+                    if (SHOW_NUMBERS) {
+                        table.children[i].children[j].innerHTML = dayNumber + "<br/><span class='numberAvailable'>(" + availabilityString + ")</span>";
+                    } else {
+                        table.children[i].children[j].innerHTML = dayNumber + "";
+                    }
+                    if (parseInt(availabilityString) == 0) {
+                        table.children[i].children[j].setAttribute('title','Not Available');
+                    } else {
+                        table.children[i].children[j].setAttribute('title','Available');
+                    }
+                    if (SHOW_COLOURS) {
+                        if (parseInt(availabilityString) == 0) {
+                            table.children[i].children[j].classList.remove("available");
+                            table.children[i].children[j].classList.add("unavailable");
+                            table.children[i].children[j].classList.remove("disabled");
+                        } else {
+                            table.children[i].children[j].classList.add("available");
+                            table.children[i].children[j].classList.remove("unavailable");
+                            table.children[i].children[j].classList.remove("disabled");
+                        }
+                    }
+                    dayNumber++;
+                } else {
+                    table.children[i].children[j].textContent = "";
+                    table.children[i].children[j].classList.remove("available");
+                    table.children[i].children[j].classList.remove("unavailable");
+                    table.children[i].children[j].classList.add("disabled");
+                }
+            }
+            if(showRow) {
+                table.children[i].style.display = "table-row";
+            }
+        }
+    }
+
+    // Update the table header to accurately reflect the month and year.
+    function drawTableHeader(month, year) {
+        var table = document.getElementById(CAL_UNIQUE_ID);
+        var monthDom = table.children[0].children[2];
+        var yearDom = table.children[0].children[3];
+        monthDom.selectedIndex = month;
+        yearDom.value = year;
+    }
+
+    // Query the PropSync API with a month and update the table to reflect that.
+    function updateByMonth(month, year) {
+        var queryDate = new Date();
+        queryDate.setUTCDate(1);
+        queryDate.setUTCMonth(month);
+        queryDate.setUTCFullYear(year);
+        var daysInMonth = new Date(queryDate.getUTCFullYear(), queryDate.getMonth()+1, 0).getDate();
+        var daysOffset = queryDate.getDay() - 1;
+        if( daysOffset == -1 ) {
+            daysOffset = 6;
+        }
+
+        queryDate.setUTCDate(queryDate.getUTCDate() - daysOffset); // Move query date to start of 37 day calender display.
+
+        drawTableHeader(month, year);
+
+        var req = createCORSRequest("POST", API_URL);
+        req.onreadystatechange = function() {
+            switch (req.readyState) {
+                case XMLHttpRequest.UNSENT :
+                    break;
+                case XMLHttpRequest.OPENED :
+                    break;
+                case XMLHttpRequest.HEADERS_RECEIVED :
+                    break;
+                case XMLHttpRequest.LOADING :
+                    break;
+                case XMLHttpRequest.DONE :
+                    drawTableData(req.response, daysOffset, daysInMonth);
+                    break;
+                default:
+                    console.log("This should never run!");
+                    break;
+            }
+        };
+        req.setRequestHeader("Content-Type", "application/json");
+        req.send(JSON.stringify({
+            nights: 37,
+            start: queryDate.toISOString().substring(0, 10), // Will break in year 10000
+            unitRef: UNIT
+        }));
+    }
+
+    var table = document.getElementById(CAL_UNIQUE_ID);
+
+    // Default to the current date.
+    var activeDate = new Date();
+    updateByMonth(activeDate.getUTCMonth(), activeDate.getUTCFullYear());
+
+    // Update `activeDate` when the month is moved backward one.
+    table.children[0].children[1].addEventListener("click", function() {
+        activeDate.setUTCMonth(activeDate.getUTCMonth() - 1);
+        updateByMonth(activeDate.getUTCMonth(), activeDate.getUTCFullYear());
+    });
+
+    // Update `activeDate` when the month picker is changed.
+    table.children[0].children[2].addEventListener("change", function() {
+        activeDate.setUTCMonth(this.selectedIndex);
+        updateByMonth(activeDate.getUTCMonth(), activeDate.getUTCFullYear());
+    });
+
+    // Update `activeDate` when the year picker is changed.
+    table.children[0].children[3].addEventListener("change", function() {
+        activeDate.setUTCFullYear(this.value);
+        updateByMonth(activeDate.getUTCMonth(), activeDate.getUTCFullYear());
+    });
+
+
+    // Update `activeDate` when the month is moved forward one.
+    table.children[0].children[4].addEventListener("click", function() {
+        activeDate.setUTCMonth(activeDate.getUTCMonth() + 1);
+        updateByMonth(activeDate.getUTCMonth(), activeDate.getUTCFullYear());
+    });
+})();
